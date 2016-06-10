@@ -1,0 +1,20 @@
+#!/usr/bin/make -f
+
+override_dh_auto_install:
+	dh_auto_install
+
+	mkdir -p $(CURDIR)/debian/homegear-ipcam/etc/homegear/families
+	cp -R $(CURDIR)/misc/Config\ Directory/* $(CURDIR)/debian/homegear-ipcam/etc/homegear/families
+	chmod 755 $(CURDIR)/debian/homegear-ipcam/etc/homegear/families
+	chmod 644 $(CURDIR)/debian/homegear-ipcam/etc/homegear/families/*
+
+	mkdir -p $(CURDIR)/debian/homegear-ipcam/etc/homegear/devices/10
+	cp $(CURDIR)/misc/Device\ Description\ Files/* $(CURDIR)/debian/homegear-ipcam/etc/homegear/devices/10
+	chmod 755 $(CURDIR)/debian/homegear-ipcam/etc/homegear/devices/10
+	chmod 644 $(CURDIR)/debian/homegear-ipcam/etc/homegear/devices/10/*
+
+override_dh_strip:
+	dh_strip --dbg-package=homegear-ipcam
+
+%:
+	dh $@ --parallel

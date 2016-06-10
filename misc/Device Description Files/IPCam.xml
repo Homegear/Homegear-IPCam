@@ -1,0 +1,378 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<homegearDevice xmlns="https://homegear.eu/xmlNamespaces/HomegearDevice" version="1">
+  <supportedDevices xmlns="https://homegear.eu/xmlNamespaces/DeviceType">
+    <device id="IPCam">
+      <description>name="IPCam</description>
+      <typeNumber>0x0001</typeNumber>
+    </device>
+  </supportedDevices>
+  <properties xmlns="https://homegear.eu/xmlNamespaces/DeviceType">
+    <visible>true</visible>
+    <deletable>true</deletable>
+  </properties>
+  <functions xmlns="https://homegear.eu/xmlNamespaces/DeviceType">
+    <function xmlns="https://homegear.eu/xmlNamespaces/FunctionGroupType" channel="0" type="MAINTENANCE">
+      <properties>
+        <internal>true</internal>
+      </properties>
+      <configParameters>IpCamConfig</configParameters>
+      <variables>maint_ch_values</variables>
+    </function>
+    <function xmlns="https://homegear.eu/xmlNamespaces/FunctionGroupType" channel="1" type="IpCam">
+      <variables>CameraVariables</variables>
+    </function>
+  </functions>
+  <packets />
+  <parameterGroups xmlns="https://homegear.eu/xmlNamespaces/DeviceType">
+    <configParameters id="IpCamConfig">
+      <parameter id="STREAM_URL">
+        <properties>
+          <readable>true</readable>
+          <writeable>true</writeable>
+          <casts>
+            <rpcBinary />
+          </casts>
+        </properties>
+        <logicalString />
+        <physicalString>
+          <operationType>config</operationType>
+        </physicalString>
+      </parameter>
+      <parameter id="SNAPSHOT_URL">
+        <properties>
+          <readable>true</readable>
+          <writeable>true</writeable>
+          <casts>
+            <rpcBinary />
+          </casts>
+        </properties>
+        <logicalString />
+        <physicalString>
+          <operationType>config</operationType>
+        </physicalString>
+      </parameter>
+      <parameter id="CA_FILE">
+        <properties>
+          <readable>true</readable>
+          <writeable>true</writeable>
+          <casts>
+            <rpcBinary />
+          </casts>
+        </properties>
+        <logicalString />
+        <physicalString>
+          <operationType>config</operationType>
+        </physicalString>
+      </parameter>
+      <parameter id="VERIFY_CERTIFICATE">
+        <properties>
+          <readable>true</readable>
+          <writeable>true</writeable>
+        </properties>
+        <logicalBoolean>
+          <defaultValue>true</defaultValue>
+        </logicalBoolean>
+        <physicalBoolean>
+          <operationType>config</operationType>
+        </physicalBoolean>
+      </parameter>
+      <parameter id="RESET_MOTION_AFTER">
+        <properties>
+          <readable>true</readable>
+          <writeable>true</writeable>
+          <unit>s</unit>
+        </properties>
+        <logicalInteger>
+          <minimumValue>5</minimumValue>
+          <maximumValue>3600</maximumValue>
+          <defaultValue>30</defaultValue>
+        </logicalInteger>
+        <physicalInteger>
+          <operationType>config</operationType>
+        </physicalInteger>
+      </parameter>
+      <parameter id="CUSTOM_URL_01">
+        <properties>
+          <readable>true</readable>
+          <writeable>true</writeable>
+          <casts>
+            <rpcBinary />
+          </casts>
+        </properties>
+        <logicalString />
+        <physicalString>
+          <operationType>config</operationType>
+        </physicalString>
+      </parameter>
+      <parameter id="CUSTOM_URL_02">
+        <properties>
+          <readable>true</readable>
+          <writeable>true</writeable>
+          <casts>
+            <rpcBinary />
+          </casts>
+        </properties>
+        <logicalString />
+        <physicalString>
+          <operationType>config</operationType>
+        </physicalString>
+      </parameter>
+      <parameter id="CUSTOM_URL_03">
+        <properties>
+          <readable>true</readable>
+          <writeable>true</writeable>
+          <casts>
+            <rpcBinary />
+          </casts>
+        </properties>
+        <logicalString />
+        <physicalString>
+          <operationType>config</operationType>
+        </physicalString>
+      </parameter>
+      <parameter id="CUSTOM_URL_04">
+        <properties>
+          <readable>true</readable>
+          <writeable>true</writeable>
+          <casts>
+            <rpcBinary />
+          </casts>
+        </properties>
+        <logicalString />
+        <physicalString>
+          <operationType>config</operationType>
+        </physicalString>
+      </parameter>
+      <parameter id="CUSTOM_URL_05">
+        <properties>
+          <readable>true</readable>
+          <writeable>true</writeable>
+          <casts>
+            <rpcBinary />
+          </casts>
+        </properties>
+        <logicalString />
+        <physicalString>
+          <operationType>config</operationType>
+        </physicalString>
+      </parameter>
+      <parameter id="CUSTOM_URL_06">
+        <properties>
+          <readable>true</readable>
+          <writeable>true</writeable>
+          <casts>
+            <rpcBinary />
+          </casts>
+        </properties>
+        <logicalString />
+        <physicalString>
+          <operationType>config</operationType>
+        </physicalString>
+      </parameter>
+      <parameter id="CUSTOM_URL_07">
+        <properties>
+          <readable>true</readable>
+          <writeable>true</writeable>
+          <casts>
+            <rpcBinary />
+          </casts>
+        </properties>
+        <logicalString />
+        <physicalString>
+          <operationType>config</operationType>
+        </physicalString>
+      </parameter>
+      <parameter id="CUSTOM_URL_08">
+        <properties>
+          <readable>true</readable>
+          <writeable>true</writeable>
+          <casts>
+            <rpcBinary />
+          </casts>
+        </properties>
+        <logicalString />
+        <physicalString>
+          <operationType>config</operationType>
+        </physicalString>
+      </parameter>
+      <parameter id="CUSTOM_URL_09">
+        <properties>
+          <readable>true</readable>
+          <writeable>true</writeable>
+          <casts>
+            <rpcBinary />
+          </casts>
+        </properties>
+        <logicalString />
+        <physicalString>
+          <operationType>config</operationType>
+        </physicalString>
+      </parameter>
+      <parameter id="CUSTOM_URL_10">
+        <properties>
+          <readable>true</readable>
+          <writeable>true</writeable>
+          <casts>
+            <rpcBinary />
+          </casts>
+        </properties>
+        <logicalString />
+        <physicalString>
+          <operationType>config</operationType>
+        </physicalString>
+      </parameter>
+    </configParameters>
+    <variables id="maint_ch_values">
+      <parameter id="UNREACH">
+        <properties>
+          <readable>true</readable>
+          <writeable>false</writeable>
+          <service>true</service>
+        </properties>
+        <logicalBoolean />
+        <physicalBoolean>
+          <operationType>internal</operationType>
+        </physicalBoolean>
+      </parameter>
+      <parameter id="STICKY_UNREACH">
+        <properties>
+          <readable>true</readable>
+          <writeable>true</writeable>
+          <service>true</service>
+          <sticky>true</sticky>
+        </properties>
+        <logicalBoolean />
+        <physicalBoolean>
+          <operationType>internal</operationType>
+        </physicalBoolean>
+      </parameter>
+      <parameter id="CONFIG_PENDING">
+        <properties>
+          <readable>true</readable>
+          <writeable>false</writeable>
+          <service>true</service>
+        </properties>
+        <logicalBoolean />
+        <physicalBoolean>
+          <operationType>internal</operationType>
+        </physicalBoolean>
+      </parameter>
+    </variables>
+    <variables id="CameraVariables">
+      <parameter id="STREAM_URL">
+        <properties>
+          <readable>true</readable>
+          <writeable>false</writeable>
+          <casts>
+            <rpcBinary />
+          </casts>
+        </properties>
+        <logicalString />
+        <physicalString />
+      </parameter>
+      <parameter id="SNAPSHOT_URL">
+        <properties>
+          <readable>true</readable>
+          <writeable>false</writeable>
+          <casts>
+            <rpcBinary />
+          </casts>
+        </properties>
+        <logicalString />
+        <physicalString />
+      </parameter>
+      <parameter id="MOTION">
+        <properties>
+          <readable>true</readable>
+          <writeable>false</writeable>
+        </properties>
+        <logicalBoolean>
+          <defaultValue>false</defaultValue>
+        </logicalBoolean>
+        <physicalBoolean>
+          <operationType>command</operationType>
+        </physicalBoolean>
+      </parameter>
+      <parameter id="OPEN_CUSTOM_URL_01">
+        <properties>
+          <readable>true</readable>
+          <writeable>true</writeable>
+        </properties>
+        <logicalAction />
+        <physicalNone />
+      </parameter>
+      <parameter id="OPEN_CUSTOM_URL_02">
+        <properties>
+          <readable>true</readable>
+          <writeable>true</writeable>
+        </properties>
+        <logicalAction />
+        <physicalNone />
+      </parameter>
+      <parameter id="OPEN_CUSTOM_URL_03">
+        <properties>
+          <readable>true</readable>
+          <writeable>true</writeable>
+        </properties>
+        <logicalAction />
+        <physicalNone />
+      </parameter>
+      <parameter id="OPEN_CUSTOM_URL_04">
+        <properties>
+          <readable>true</readable>
+          <writeable>true</writeable>
+        </properties>
+        <logicalAction />
+        <physicalNone />
+      </parameter>
+      <parameter id="OPEN_CUSTOM_URL_05">
+        <properties>
+          <readable>true</readable>
+          <writeable>true</writeable>
+        </properties>
+        <logicalAction />
+        <physicalNone />
+      </parameter>
+      <parameter id="OPEN_CUSTOM_URL_06">
+        <properties>
+          <readable>true</readable>
+          <writeable>true</writeable>
+        </properties>
+        <logicalAction />
+        <physicalNone />
+      </parameter>
+      <parameter id="OPEN_CUSTOM_URL_07">
+        <properties>
+          <readable>true</readable>
+          <writeable>true</writeable>
+        </properties>
+        <logicalAction />
+        <physicalNone />
+      </parameter>
+      <parameter id="OPEN_CUSTOM_URL_08">
+        <properties>
+          <readable>true</readable>
+          <writeable>true</writeable>
+        </properties>
+        <logicalAction />
+        <physicalNone />
+      </parameter>
+      <parameter id="OPEN_CUSTOM_URL_09">
+        <properties>
+          <readable>true</readable>
+          <writeable>true</writeable>
+        </properties>
+        <logicalAction />
+        <physicalNone />
+      </parameter>
+      <parameter id="OPEN_CUSTOM_URL_10">
+        <properties>
+          <readable>true</readable>
+          <writeable>true</writeable>
+        </properties>
+        <logicalAction />
+        <physicalNone />
+      </parameter>
+    </variables>
+  </parameterGroups>
+</homegearDevice>
