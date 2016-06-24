@@ -30,7 +30,7 @@
 #ifndef IPCAMPEER_H_
 #define IPCAMPEER_H_
 
-#include "homegear-base/BaseLib.h"
+#include <homegear-base/BaseLib.h>
 
 #include <list>
 

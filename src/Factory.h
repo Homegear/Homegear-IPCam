@@ -30,7 +30,7 @@
 #ifndef FACTORY_H
 #define FACTORY_H
 
-#include "homegear-base/BaseLib.h"
+#include <homegear-base/BaseLib.h>
 #include "IpCam.h"
 
 class IpCamFactory : BaseLib::Systems::SystemFactory

@@ -33,7 +33,7 @@
 #define IPCAM_FAMILY_ID 10
 #define IPCAM_FAMILY_NAME "IPCam"
 
-#include "homegear-base/BaseLib.h"
+#include <homegear-base/BaseLib.h>
 #include "IpCam.h"
 #include "PhysicalInterfaces/IIpCamInterface.h"
 

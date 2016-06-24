@@ -30,7 +30,7 @@
 #ifndef IPCAM_H_
 #define IPCAM_H_
 
-#include "homegear-base/BaseLib.h"
+#include <homegear-base/BaseLib.h>
 
 using namespace BaseLib;
 

@@ -30,7 +30,7 @@
 #ifndef IPCAMCENTRAL_H_
 #define IPCAMCENTRAL_H_
 
-#include "homegear-base/BaseLib.h"
+#include <homegear-base/BaseLib.h>
 #include "IpCamPeer.h"
 
 #include <memory>
@@ -55,7 +55,7 @@ public:
 	std::shared_ptr<IpCamPeer> getPeer(uint64_t id);
 	std::shared_ptr<IpCamPeer> getPeer(std::string serialNumber);
 
-	virtual PVariable createDevice(BaseLib::PRpcClientInfo clientInfo, int32_t deviceType, std::string serialNumber, int32_t address, int32_t firmwareVersion);
+	virtual PVariable createDevice(BaseLib::PRpcClientInfo clientInfo, int32_t deviceType, std::string serialNumber, int32_t address, int32_t firmwareVersion, std::string interfaceId);
 	virtual PVariable deleteDevice(BaseLib::PRpcClientInfo clientInfo, std::string serialNumber, int32_t flags);
 	virtual PVariable deleteDevice(BaseLib::PRpcClientInfo clientInfo, uint64_t peerID, int32_t flags);
 	virtual PVariable getDeviceInfo(BaseLib::PRpcClientInfo clientInfo, uint64_t id, std::map<std::string, bool> fields);
