@@ -768,7 +768,7 @@ std::shared_ptr<IpCamPeer> IpCamCentral::createPeer(BaseLib::Systems::LogicalDev
     return std::shared_ptr<IpCamPeer>();
 }
 
-PVariable IpCamCentral::createDevice(BaseLib::PRpcClientInfo clientInfo, int32_t deviceType, std::string serialNumber, int32_t address, int32_t firmwareVersion)
+PVariable IpCamCentral::createDevice(BaseLib::PRpcClientInfo clientInfo, int32_t deviceType, std::string serialNumber, int32_t address, int32_t firmwareVersion, std::string interfaceId)
 {
 	try
 	{

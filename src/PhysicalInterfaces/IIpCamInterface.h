@@ -30,7 +30,7 @@
 #ifndef IIPCAMINTERFACE_H_
 #define IIPCAMINTERFACE_H_
 
-#include "homegear-base/BaseLib.h"
+#include <homegear-base/BaseLib.h>
 
 namespace IpCam
 {
