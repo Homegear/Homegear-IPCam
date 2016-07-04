@@ -79,7 +79,7 @@ public:
     virtual void homegearShuttingDown();
 
     // {{{ Webserver events
-		bool onGet(BaseLib::Rpc::PServerInfo& serverInfo, BaseLib::Http& httpRequest, std::shared_ptr<BaseLib::SocketOperations>& socket, std::string& path);
+		bool onGet(BaseLib::Rpc::PServerInfo& serverInfo, BaseLib::Http& httpRequest, std::shared_ptr<BaseLib::TcpSocket>& socket, std::string& path);
 	// }}}
 
 	//RPC methods
