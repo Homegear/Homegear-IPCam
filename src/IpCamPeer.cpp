@@ -470,7 +470,7 @@ PParameterGroup IpCamPeer::getParameterSet(int32_t channel, ParameterGroup::Type
 }
 
 // {{{ Webserver events
-	bool IpCamPeer::onGet(BaseLib::Rpc::PServerInfo& serverInfo, BaseLib::Http& httpRequest, std::shared_ptr<BaseLib::SocketOperations>& socket, std::string& path)
+	bool IpCamPeer::onGet(BaseLib::Rpc::PServerInfo& serverInfo, BaseLib::Http& httpRequest, std::shared_ptr<BaseLib::TcpSocket>& socket, std::string& path)
 	{
 		if(path == "/ipcam/" + std::to_string(_peerID) + "/stream.mjpeg")
 		{
@@ -479,7 +479,7 @@ PParameterGroup IpCamPeer::getParameterSet(int32_t channel, ParameterGroup::Type
 				GD::out.printWarning("Warning: Can't open stream for peer with id " + std::to_string(_peerID) + ": IP address is empty.");
 				return false;
 			}
-			BaseLib::SocketOperations cameraSocket(_bl, _streamUrlInfo.ip, std::to_string(_streamUrlInfo.port), _streamUrlInfo.ssl, _caFile, _verifyCertificate);
+			BaseLib::TcpSocket cameraSocket(_bl, _streamUrlInfo.ip, std::to_string(_streamUrlInfo.port), _streamUrlInfo.ssl, _caFile, _verifyCertificate);
 			try
 			{
 				std::string response;
