@@ -100,8 +100,8 @@ protected:
 	};
 
 	bool _shuttingDown = false;
-	std::shared_ptr<BaseLib::RPC::RPCEncoder> _binaryEncoder;
-	std::shared_ptr<BaseLib::RPC::RPCDecoder> _binaryDecoder;
+	std::shared_ptr<BaseLib::Rpc::RpcEncoder> _binaryEncoder;
+	std::shared_ptr<BaseLib::Rpc::RpcDecoder> _binaryDecoder;
 	std::shared_ptr<BaseLib::HttpClient> _httpClient;
 	UrlInfo _streamUrlInfo;
 	UrlInfo _snapshotUrlInfo;
