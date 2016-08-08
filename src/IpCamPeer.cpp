@@ -128,8 +128,8 @@ void IpCamPeer::worker()
 
 void IpCamPeer::init()
 {
-	_binaryEncoder.reset(new BaseLib::RPC::RPCEncoder(_bl));
-	_binaryDecoder.reset(new BaseLib::RPC::RPCDecoder(_bl));
+	_binaryEncoder.reset(new BaseLib::Rpc::RpcEncoder(_bl));
+	_binaryDecoder.reset(new BaseLib::Rpc::RpcDecoder(_bl));
 	_httpClient.reset(new BaseLib::HttpClient(_bl, "ipcam", 65635, false));
 	raiseAddWebserverEventHandler(this);
 	std::string httpOkHeader("HTTP/1.1 200 OK\r\nConnection: close\r\n\r\n");
