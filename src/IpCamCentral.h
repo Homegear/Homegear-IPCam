@@ -69,7 +69,7 @@ protected:
 	virtual void savePeers(bool full);
 	virtual void loadVariables() {}
 	virtual void saveVariables() {}
-	std::shared_ptr<IpCamPeer> createPeer(BaseLib::Systems::LogicalDeviceType deviceType, std::string serialNumber, bool save = true);
+	std::shared_ptr<IpCamPeer> createPeer(uint32_t deviceType, std::string serialNumber, bool save = true);
 	void deletePeer(uint64_t id);
 	virtual void worker();
 	virtual void init();
