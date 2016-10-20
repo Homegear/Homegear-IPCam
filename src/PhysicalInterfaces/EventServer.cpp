@@ -77,7 +77,12 @@ void EventServer::getAddress()
 {
 	try
 	{
-		if(_settings->host.empty())
+		if(!_settings->host.empty() && !BaseLib::Net::isIp(_settings->host))
+		{
+			//Assume address is interface name
+			_listenAddress = BaseLib::Net::getMyIpAddress(_settings->host);
+		}
+		else if(_settings->host.empty())
 		{
 			_listenAddress = BaseLib::Net::getMyIpAddress();
 			if(_listenAddress.empty()) _bl->out.printError("Error: No IP address could be found to bind the server to. Please specify the IP address manually in main.conf.");
