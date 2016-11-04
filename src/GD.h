@@ -45,7 +45,7 @@ class GD
 public:
 	virtual ~GD();
 
-	static BaseLib::Obj* bl;
+	static BaseLib::SharedObjects* bl;
 	static IpCam* family;
 	static std::shared_ptr<IIpCamInterface> physicalInterface;
 	static BaseLib::Output out;

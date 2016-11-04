@@ -62,7 +62,7 @@ public:
 	virtual PVariable putParamset(BaseLib::PRpcClientInfo clientInfo, std::string serialNumber, int32_t channel, ParameterGroup::Type::Enum type, std::string remoteSerialNumber, int32_t remoteChannel, PVariable paramset);
 	virtual PVariable putParamset(BaseLib::PRpcClientInfo clientInfo, uint64_t peerID, int32_t channel, ParameterGroup::Type::Enum type, uint64_t remoteID, int32_t remoteChannel, PVariable paramset);
 protected:
-	bool _stopWorkerThread = false;
+	std::atomic_bool _stopWorkerThread;
 	std::thread _workerThread;
 
 	virtual void loadPeers();

@@ -78,6 +78,8 @@ void IpCamCentral::init()
 		if(_initialized) return; //Prevent running init two times
 		_initialized = true;
 
+		_stopWorkerThread = false;
+
 		_bl->threadManager.start(_workerThread, true, _bl->settings.workerThreadPriority(), _bl->settings.workerThreadPolicy(), &IpCamCentral::worker, this);
 	}
 	catch(const std::exception& ex)
