@@ -48,7 +48,7 @@ class EventServer : public IIpCamInterface
     protected:
         std::string _listenAddress;
 
-        void getAddress();
+        void setListenAddress();
 };
 
 }
