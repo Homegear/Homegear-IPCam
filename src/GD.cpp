@@ -31,7 +31,7 @@
 
 namespace IpCam
 {
-	BaseLib::Obj* GD::bl = nullptr;
+	BaseLib::SharedObjects* GD::bl = nullptr;
 	IpCam* GD::family = nullptr;
 	std::shared_ptr<IIpCamInterface> GD::physicalInterface;
 	BaseLib::Output GD::out;

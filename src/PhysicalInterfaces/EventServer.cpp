@@ -49,7 +49,7 @@ EventServer::EventServer(std::shared_ptr<BaseLib::Systems::PhysicalInterfaceSett
 		return;
 	}
 
-	getAddress();
+	setListenAddress();
 }
 
 EventServer::~EventServer()
@@ -73,7 +73,7 @@ EventServer::~EventServer()
     }
 }
 
-void EventServer::getAddress()
+void EventServer::setListenAddress()
 {
 	try
 	{
@@ -88,6 +88,7 @@ void EventServer::getAddress()
 			if(_listenAddress.empty()) _bl->out.printError("Error: No IP address could be found to bind the server to. Please specify the IP address manually in main.conf.");
 		}
 		else _listenAddress = _settings->host;
+		_ipAddress = _listenAddress;
 	}
 	catch(const std::exception& ex)
 	{
