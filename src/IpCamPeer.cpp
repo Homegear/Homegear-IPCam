@@ -95,16 +95,16 @@ void IpCamPeer::worker()
 		if(_disposing) return;
 		if(_motion && _motionTime + _resetMotionAfter <= BaseLib::HelperFunctions::getTime())
 		{
-			BaseLib::Systems::RPCConfigurationParameter* parameter = &valuesCentral[1]["MOTION"];
-			if(parameter->rpcParameter)
+			BaseLib::Systems::RpcConfigurationParameter& parameter = valuesCentral[1]["MOTION"];
+			if(parameter.rpcParameter)
 			{
 				_motion = false;
 				std::shared_ptr<std::vector<std::string>> valueKeys(new std::vector<std::string>{ "MOTION" });
 				std::shared_ptr<std::vector<PVariable>> values(new std::vector<PVariable> { PVariable(new Variable(false)) });
-				parameter->data.clear();
-				parameter->data.push_back(0);
-				if(parameter->databaseID > 0) saveParameter(parameter->databaseID, parameter->data);
-				else saveParameter(0, ParameterGroup::Type::Enum::variables, 1, "MOTION", parameter->data);
+				std::vector<uint8_t> parameterData{ 0 };
+				parameter.setBinaryData(parameterData);
+				if(parameter.databaseId > 0) saveParameter(parameter.databaseId, parameterData);
+				else saveParameter(0, ParameterGroup::Type::Enum::variables, 1, "MOTION", parameterData);
 				if(_bl->debugLevel >= 4) GD::out.printInfo("Info: MOTION of peer " + std::to_string(_peerID) + " with serial number " + _serialNumber + ":1 was set to false.");
 				std::string address(_serialNumber + ":1");
 				raiseEvent(_peerID, 1, valueKeys, values);
@@ -289,15 +289,16 @@ std::string IpCamPeer::printConfig()
 		std::ostringstream stringStream;
 		stringStream << "MASTER" << std::endl;
 		stringStream << "{" << std::endl;
-		for(std::unordered_map<uint32_t, std::unordered_map<std::string, BaseLib::Systems::RPCConfigurationParameter>>::const_iterator i = configCentral.begin(); i != configCentral.end(); ++i)
+		for(std::unordered_map<uint32_t, std::unordered_map<std::string, BaseLib::Systems::RpcConfigurationParameter>>::iterator i = configCentral.begin(); i != configCentral.end(); ++i)
 		{
 			stringStream << "\t" << "Channel: " << std::dec << i->first << std::endl;
 			stringStream << "\t{" << std::endl;
-			for(std::unordered_map<std::string, BaseLib::Systems::RPCConfigurationParameter>::const_iterator j = i->second.begin(); j != i->second.end(); ++j)
+			for(std::unordered_map<std::string, BaseLib::Systems::RpcConfigurationParameter>::iterator j = i->second.begin(); j != i->second.end(); ++j)
 			{
 				stringStream << "\t\t[" << j->first << "]: ";
 				if(!j->second.rpcParameter) stringStream << "(No RPC parameter) ";
-				for(std::vector<uint8_t>::const_iterator k = j->second.data.begin(); k != j->second.data.end(); ++k)
+				std::vector<uint8_t> parameterData = j->second.getBinaryData();
+				for(std::vector<uint8_t>::const_iterator k = parameterData.begin(); k != parameterData.end(); ++k)
 				{
 					stringStream << std::hex << std::setfill('0') << std::setw(2) << (int32_t)*k << " ";
 				}
@@ -309,15 +310,16 @@ std::string IpCamPeer::printConfig()
 
 		stringStream << "VALUES" << std::endl;
 		stringStream << "{" << std::endl;
-		for(std::unordered_map<uint32_t, std::unordered_map<std::string, BaseLib::Systems::RPCConfigurationParameter>>::const_iterator i = valuesCentral.begin(); i != valuesCentral.end(); ++i)
+		for(std::unordered_map<uint32_t, std::unordered_map<std::string, BaseLib::Systems::RpcConfigurationParameter>>::iterator i = valuesCentral.begin(); i != valuesCentral.end(); ++i)
 		{
 			stringStream << "\t" << "Channel: " << std::dec << i->first << std::endl;
 			stringStream << "\t{" << std::endl;
-			for(std::unordered_map<std::string, BaseLib::Systems::RPCConfigurationParameter>::const_iterator j = i->second.begin(); j != i->second.end(); ++j)
+			for(std::unordered_map<std::string, BaseLib::Systems::RpcConfigurationParameter>::iterator j = i->second.begin(); j != i->second.end(); ++j)
 			{
 				stringStream << "\t\t[" << j->first << "]: ";
 				if(!j->second.rpcParameter) stringStream << "(No RPC parameter) ";
-				for(std::vector<uint8_t>::const_iterator k = j->second.data.begin(); k != j->second.data.end(); ++k)
+				std::vector<uint8_t> parameterData = j->second.getBinaryData();
+				for(std::vector<uint8_t>::const_iterator k = parameterData.begin(); k != parameterData.end(); ++k)
 				{
 					stringStream << std::hex << std::setfill('0') << std::setw(2) << (int32_t)*k << " ";
 				}
@@ -387,22 +389,24 @@ bool IpCamPeer::load(BaseLib::Systems::ICentral* central)
 		serviceMessages.reset(new BaseLib::Systems::ServiceMessages(_bl, _peerID, _serialNumber, this));
 		serviceMessages->load();
 
-		BaseLib::Systems::RPCConfigurationParameter* parameter = &valuesCentral[1]["MOTION"];
-		if(parameter->rpcParameter)
+		BaseLib::Systems::RpcConfigurationParameter& parameter = valuesCentral[1]["MOTION"];
+		if(parameter.rpcParameter)
 		{
-			if(!parameter->data.empty() && parameter->data.at(0))
+			std::vector<uint8_t> parameterData = parameter.getBinaryData();
+			if(!parameterData.empty() && parameterData.at(0))
 			{
 				_motion = true;
 				_motionTime = BaseLib::HelperFunctions::getTime();
-				parameter->rpcParameter->convertToPacket(BaseLib::PVariable(new BaseLib::Variable(true)), parameter->data);
-				if(parameter->databaseID > 0) saveParameter(parameter->databaseID, parameter->data);
-				else saveParameter(0, ParameterGroup::Type::Enum::variables, 1, "MOTION", parameter->data);
+				parameter.rpcParameter->convertToPacket(BaseLib::PVariable(new BaseLib::Variable(true)), parameterData);
+				if(parameter.databaseId > 0) saveParameter(parameter.databaseId, parameterData);
+				else saveParameter(0, ParameterGroup::Type::Enum::variables, 1, "MOTION", parameterData);
 			}
 		}
-		parameter = &configCentral[0]["RESET_MOTION_AFTER"];
-		if(parameter->rpcParameter)
+		parameter = configCentral[0]["RESET_MOTION_AFTER"];
+		if(parameter.rpcParameter)
 		{
-			_resetMotionAfter = parameter->rpcParameter->convertFromPacket(parameter->data)->integerValue * 1000;
+			std::vector<uint8_t> parameterData = parameter.getBinaryData();
+			_resetMotionAfter = parameter.rpcParameter->convertFromPacket(parameterData)->integerValue * 1000;
 			if(_resetMotionAfter < 5000) _resetMotionAfter = 5000;
 			else if(_resetMotionAfter > 3600000) _resetMotionAfter = 3600000;
 		}
@@ -559,24 +563,25 @@ PParameterGroup IpCamPeer::getParameterSet(int32_t channel, ParameterGroup::Type
 			{
 				GD::out.printError("Error: " + ex.what());
 			}
-			BaseLib::Systems::RPCConfigurationParameter* parameter = &valuesCentral[1]["MOTION"];
-			if(!parameter->rpcParameter) return true;
-			parameter->data.clear();
-			parameter->data.push_back(1);
-			if(parameter->databaseID > 0) saveParameter(parameter->databaseID, parameter->data);
-			else saveParameter(0, ParameterGroup::Type::Enum::variables, 1, "MOTION", parameter->data);
+			BaseLib::Systems::RpcConfigurationParameter& parameter = valuesCentral[1]["MOTION"];
+			if(!parameter.rpcParameter) return true;
+			std::vector<uint8_t> parameterData{ 1 };
+			parameter.setBinaryData(parameterData);
+			if(parameter.databaseId > 0) saveParameter(parameter.databaseId, parameterData);
+			else saveParameter(0, ParameterGroup::Type::Enum::variables, 1, "MOTION", parameterData);
 			if(_bl->debugLevel >= 4) GD::out.printInfo("Info: MOTION of peer " + std::to_string(_peerID) + " with serial number " + _serialNumber + ":1 was set to true.");
 			std::shared_ptr<std::vector<std::string>> valueKeys(new std::vector<std::string>{ "MOTION" });
-			std::shared_ptr<std::vector<PVariable>> values(new std::vector<PVariable> { parameter->rpcParameter->convertFromPacket(parameter->data, true) });
+			std::shared_ptr<std::vector<PVariable>> values(new std::vector<PVariable> { parameter.rpcParameter->convertFromPacket(parameterData, true) });
 			std::string address(_serialNumber + ":1");
 			_motion = true;
 			_motionTime = BaseLib::HelperFunctions::getTime();
 			raiseEvent(_peerID, 1, valueKeys, values);
 			raiseRPCEvent(_peerID, 1, address, valueKeys, values);
-			parameter = &configCentral[0]["RESET_MOTION_AFTER"];
-			if(parameter->rpcParameter)
+			parameter = configCentral[0]["RESET_MOTION_AFTER"];
+			if(parameter.rpcParameter)
 			{
-				_resetMotionAfter = parameter->rpcParameter->convertFromPacket(parameter->data)->integerValue * 1000;
+				parameterData = parameter.getBinaryData();
+				_resetMotionAfter = parameter.rpcParameter->convertFromPacket(parameterData)->integerValue * 1000;
 				if(_resetMotionAfter < 5000) _resetMotionAfter = 5000;
 				else if(_resetMotionAfter > 3600000) _resetMotionAfter = 3600000;
 			}
@@ -647,23 +652,27 @@ void IpCamPeer::initHttpClient()
 {
 	try
 	{
-		BaseLib::Systems::RPCConfigurationParameter* parameter = &configCentral[0]["STREAM_URL"];
-		if(parameter->rpcParameter)
+		BaseLib::Systems::RpcConfigurationParameter& parameter = configCentral[0]["STREAM_URL"];
+		if(parameter.rpcParameter)
 		{
-			std::string streamUrl = parameter->rpcParameter->convertFromPacket(parameter->data)->stringValue;
+			std::vector<uint8_t> parameterData = parameter.getBinaryData();
+			std::string streamUrl = parameter.rpcParameter->convertFromPacket(parameterData)->stringValue;
 			_streamUrlInfo = getUrlInfo(streamUrl);
 		}
-		parameter = &configCentral[0]["SNAPSHOT_URL"];
-		if(parameter->rpcParameter)
+		parameter = configCentral[0]["SNAPSHOT_URL"];
+		if(parameter.rpcParameter)
 		{
-			std::string streamUrl = parameter->rpcParameter->convertFromPacket(parameter->data)->stringValue;
+			std::vector<uint8_t> parameterData = parameter.getBinaryData();
+			std::string streamUrl = parameter.rpcParameter->convertFromPacket(parameterData)->stringValue;
 			_snapshotUrlInfo = getUrlInfo(streamUrl);
 		}
 
-		parameter = &configCentral[0]["CA_FILE"];
-		if(parameter->rpcParameter) _caFile = parameter->rpcParameter->convertFromPacket(parameter->data)->stringValue;
-		parameter = &configCentral[0]["VERIFY_CERTIFICATE"];
-		if(parameter->rpcParameter) _verifyCertificate = parameter->rpcParameter->convertFromPacket(parameter->data)->booleanValue;
+		parameter = configCentral[0]["CA_FILE"];
+		std::vector<uint8_t> parameterData = parameter.getBinaryData();
+		if(parameter.rpcParameter) _caFile = parameter.rpcParameter->convertFromPacket(parameterData)->stringValue;
+		parameter = configCentral[0]["VERIFY_CERTIFICATE"];
+		parameterData = parameter.getBinaryData();
+		if(parameter.rpcParameter) _verifyCertificate = parameter.rpcParameter->convertFromPacket(parameterData)->booleanValue;
 
 		if(_streamUrlInfo.ip.empty())
 		{
@@ -671,31 +680,33 @@ void IpCamPeer::initHttpClient()
 			return;
 		}
 
-		parameter = &valuesCentral[1]["STREAM_URL"];
-		if(parameter->rpcParameter && _bl->rpcPort != 0)
+		parameter = valuesCentral[1]["STREAM_URL"];
+		if(parameter.rpcParameter && _bl->rpcPort != 0)
 		{
-
-			BaseLib::PVariable variable = parameter->rpcParameter->convertFromPacket(parameter->data, true);
+			parameterData = parameter.getBinaryData();
+			BaseLib::PVariable variable = parameter.rpcParameter->convertFromPacket(parameterData, true);
 			std::string newPrefix("http://" + GD::physicalInterface->listenAddress() + (GD::bl->rpcPort != 80 ? ":" + std::to_string(GD::bl->rpcPort) : "") + "/ipcam/" + std::to_string(_peerID) + "/");
 			std::string newStreamUrl(newPrefix + "stream.mjpeg");
 			if(variable->stringValue != newStreamUrl)
 			{
 				variable->stringValue = newStreamUrl;
-				parameter->rpcParameter->convertToPacket(variable, parameter->data);
-				if(parameter->databaseID > 0) saveParameter(parameter->databaseID, parameter->data);
-				else saveParameter(0, ParameterGroup::Type::Enum::variables, 1, "STREAM_URL", parameter->data);
+				parameter.rpcParameter->convertToPacket(variable, parameterData);
+				parameter.setBinaryData(parameterData);
+				if(parameter.databaseId > 0) saveParameter(parameter.databaseId, parameterData);
+				else saveParameter(0, ParameterGroup::Type::Enum::variables, 1, "STREAM_URL", parameterData);
 				std::shared_ptr<std::vector<std::string>> valueKeys(new std::vector<std::string>{ "STREAM_URL" });
 				std::shared_ptr<std::vector<PVariable>> values(new std::vector<PVariable> { variable });
 				std::string address(_serialNumber + ":1");
 				if(_bl->debugLevel >= 4) GD::out.printInfo("Info: STREAM_URL of peer " + std::to_string(_peerID) + " with serial number " + _serialNumber + ":1 was set to " + variable->stringValue + ".");
 
-				parameter = &valuesCentral[1]["SNAPSHOT_URL"];
-				if(parameter->rpcParameter)
+				parameter = valuesCentral[1]["SNAPSHOT_URL"];
+				if(parameter.rpcParameter)
 				{
 					variable = PVariable(new BaseLib::Variable(newPrefix + "snapshot.jpg"));
-					parameter->rpcParameter->convertToPacket(variable, parameter->data);
-					if(parameter->databaseID > 0) saveParameter(parameter->databaseID, parameter->data);
-					else saveParameter(0, ParameterGroup::Type::Enum::variables, 1, "SNAPSHOT_URL", parameter->data);
+					parameter.rpcParameter->convertToPacket(variable, parameterData);
+					parameter.setBinaryData(parameterData);
+					if(parameter.databaseId > 0) saveParameter(parameter.databaseId, parameterData);
+					else saveParameter(0, ParameterGroup::Type::Enum::variables, 1, "SNAPSHOT_URL", parameterData);
 					valueKeys->push_back("SNAPSHOT_URL");
 					values->push_back(variable);
 					std::string address(_serialNumber + ":1");
@@ -772,13 +783,15 @@ PVariable IpCamPeer::getParamset(BaseLib::PRpcClientInfo clientInfo, int32_t cha
 				if(!i->second->readable) continue;
 				if(valuesCentral.find(channel) == valuesCentral.end()) continue;
 				if(valuesCentral[channel].find(i->second->id) == valuesCentral[channel].end()) continue;
-				element = i->second->convertFromPacket(valuesCentral[channel][i->second->id].data);
+				std::vector<uint8_t> parameterData = valuesCentral[channel][i->second->id].getBinaryData();
+				element = i->second->convertFromPacket(parameterData);
 			}
 			else if(type == ParameterGroup::Type::Enum::config)
 			{
 				if(configCentral.find(channel) == configCentral.end()) continue;
 				if(configCentral[channel].find(i->second->id) == configCentral[channel].end()) continue;
-				element = i->second->convertFromPacket(configCentral[channel][i->second->id].data);
+				std::vector<uint8_t> parameterData = configCentral[channel][i->second->id].getBinaryData();
+				element = i->second->convertFromPacket(parameterData);
 			}
 			else if(type == ParameterGroup::Type::Enum::link)
 			{
@@ -859,7 +872,8 @@ PVariable IpCamPeer::getValue(BaseLib::PRpcClientInfo clientInfo, uint32_t chann
 		BaseLib::PVariable variable;
 		if(parameter->getPackets.empty())
 		{
-			variable = parameter->convertFromPacket(valuesCentral[channel][valueKey].data);
+			std::vector<uint8_t> parameterData = valuesCentral[channel][valueKey].getBinaryData();
+			variable = parameter->convertFromPacket(parameterData);
 			if(parameter->password) variable.reset(new Variable(variable->type));
 			return variable;
 		}
@@ -911,14 +925,14 @@ PVariable IpCamPeer::putParamset(BaseLib::PRpcClientInfo clientInfo, int32_t cha
 				if(i->first.empty() || !i->second) continue;
 				std::vector<uint8_t> value;
 				if(configCentral[channel].find(i->first) == configCentral[channel].end()) continue;
-				BaseLib::Systems::RPCConfigurationParameter* parameter = &configCentral[channel][i->first];
-				if(!parameter->rpcParameter) continue;
-				if(parameter->rpcParameter->password && i->second->stringValue.empty()) continue; //Don't safe password if empty
-				parameter->rpcParameter->convertToPacket(i->second, value);
+				BaseLib::Systems::RpcConfigurationParameter& parameter = configCentral[channel][i->first];
+				if(!parameter.rpcParameter) continue;
+				if(parameter.rpcParameter->password && i->second->stringValue.empty()) continue; //Don't safe password if empty
+				parameter.rpcParameter->convertToPacket(i->second, value);
 				std::vector<uint8_t> shiftedValue = value;
-				parameter->rpcParameter->adjustBitPosition(shiftedValue);
-				int32_t intIndex = (int32_t)parameter->rpcParameter->physical->index;
-				int32_t list = parameter->rpcParameter->physical->list;
+				parameter.rpcParameter->adjustBitPosition(shiftedValue);
+				int32_t intIndex = (int32_t)parameter.rpcParameter->physical->index;
+				int32_t list = parameter.rpcParameter->physical->list;
 				if(list == -1) list = 0;
 				if(allParameters[list].find(intIndex) == allParameters[list].end()) allParameters[list][intIndex] = shiftedValue;
 				else
@@ -931,15 +945,15 @@ PVariable IpCamPeer::putParamset(BaseLib::PRpcClientInfo clientInfo, int32_t cha
 						index++;
 					}
 				}
-				parameter->data = value;
-				if(parameter->databaseID > 0) saveParameter(parameter->databaseID, parameter->data);
-				else saveParameter(0, ParameterGroup::Type::Enum::config, channel, i->first, parameter->data);
+				parameter.setBinaryData(value);
+				if(parameter.databaseId > 0) saveParameter(parameter.databaseId, value);
+				else saveParameter(0, ParameterGroup::Type::Enum::config, channel, i->first, value);
 
 				if(channel == 0 && (i->first == "STREAM_URL" || i->first == "CA_FILE" || i->first == "VERIFY_CERTIFICATE")) reloadHttpClient = true;
 
 				GD::out.printInfo("Info: Parameter " + i->first + " of peer " + std::to_string(_peerID) + " and channel " + std::to_string(channel) + " was set to 0x" + BaseLib::HelperFunctions::getHexString(allParameters[list][intIndex]) + ".");
 				//Only send to device when parameter is of type config
-				if(parameter->rpcParameter->physical->operationType != IPhysical::OperationType::Enum::config && parameter->rpcParameter->physical->operationType != IPhysical::OperationType::Enum::configString) continue;
+				if(parameter.rpcParameter->physical->operationType != IPhysical::OperationType::Enum::config && parameter.rpcParameter->physical->operationType != IPhysical::OperationType::Enum::configString) continue;
 				changedParameters[list][intIndex] = allParameters[list][intIndex];
 			}
 
@@ -988,10 +1002,11 @@ PVariable IpCamPeer::setValue(BaseLib::PRpcClientInfo clientInfo, uint32_t chann
 		if(valueKey.size() == 18 && valueKey.compare(0, 16, "OPEN_CUSTOM_URL_") == 0)
 		{
 			std::string number = valueKey.substr(16);
-			BaseLib::Systems::RPCConfigurationParameter* parameter = &configCentral[0]["CUSTOM_URL_" + number];
-			if(parameter->rpcParameter)
+			BaseLib::Systems::RpcConfigurationParameter& parameter = configCentral[0]["CUSTOM_URL_" + number];
+			if(parameter.rpcParameter)
 			{
-				std::string customUrl = parameter->rpcParameter->convertFromPacket(parameter->data)->stringValue;
+				std::vector<uint8_t> parameterData = parameter.getBinaryData();
+				std::string customUrl = parameter.rpcParameter->convertFromPacket(parameterData)->stringValue;
 				UrlInfo info = getUrlInfo(customUrl);
 				if(customUrl.empty()) return Variable::createError(-1, "CUSTOM_URL_" + number + " is not set.");
 				else if(info.ip.empty()) return Variable::createError(-1, "Could not get IP address from custom URL.");
