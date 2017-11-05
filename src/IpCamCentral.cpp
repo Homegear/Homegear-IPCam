@@ -611,7 +611,8 @@ std::string IpCamCentral::handleCliCommand(std::string command)
 							typeID.resize(typeWidth2 - 3);
 							typeID += "...";
 						}
-						stringStream << std::setw(typeWidth2) << typeID;
+						else typeID.resize(typeWidth2, ' ');
+						stringStream << typeID;
 					}
 					else stringStream << std::setw(typeWidth2);
 					stringStream << std::endl << std::dec;
