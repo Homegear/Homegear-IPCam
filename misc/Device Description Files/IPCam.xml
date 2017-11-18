@@ -2,7 +2,7 @@
 <homegearDevice xmlns="https://homegear.eu/xmlNamespaces/HomegearDevice" version="1">
   <supportedDevices xmlns="https://homegear.eu/xmlNamespaces/DeviceType">
     <device id="IPCam">
-      <description>name="IPCam</description>
+      <description>IP Camera</description>
       <typeNumber>0x0001</typeNumber>
     </device>
   </supportedDevices>
