@@ -27,8 +27,8 @@
  * files in the program, then also delete it here.
  */
 
-#include "GD.h"
 #include "IIpCamInterface.h"
+#include "../GD.h"
 
 namespace IpCam
 {
