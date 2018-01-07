@@ -30,7 +30,7 @@
 #ifndef EVENTSERVER_H
 #define EVENTSERVER_H
 
-#include "PhysicalInterfaces/IIpCamInterface.h"
+#include "IIpCamInterface.h"
 
 namespace IpCam
 {

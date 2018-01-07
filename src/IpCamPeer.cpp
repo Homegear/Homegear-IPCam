@@ -652,27 +652,34 @@ void IpCamPeer::initHttpClient()
 {
 	try
 	{
-		BaseLib::Systems::RpcConfigurationParameter& parameter = configCentral[0]["STREAM_URL"];
-		if(parameter.rpcParameter)
 		{
-			std::vector<uint8_t> parameterData = parameter.getBinaryData();
-			std::string streamUrl = parameter.rpcParameter->convertFromPacket(parameterData)->stringValue;
-			_streamUrlInfo = getUrlInfo(streamUrl);
-		}
-		parameter = configCentral[0]["SNAPSHOT_URL"];
-		if(parameter.rpcParameter)
-		{
-			std::vector<uint8_t> parameterData = parameter.getBinaryData();
-			std::string streamUrl = parameter.rpcParameter->convertFromPacket(parameterData)->stringValue;
-			_snapshotUrlInfo = getUrlInfo(streamUrl);
+			BaseLib::Systems::RpcConfigurationParameter& parameter = configCentral[0]["STREAM_URL"];
+			if(parameter.rpcParameter)
+			{
+				std::vector<uint8_t> parameterData = parameter.getBinaryData();
+				std::string streamUrl = parameter.rpcParameter->convertFromPacket(parameterData)->stringValue;
+				_streamUrlInfo = getUrlInfo(streamUrl);
+			}
 		}
 
-		parameter = configCentral[0]["CA_FILE"];
-		std::vector<uint8_t> parameterData = parameter.getBinaryData();
-		if(parameter.rpcParameter) _caFile = parameter.rpcParameter->convertFromPacket(parameterData)->stringValue;
-		parameter = configCentral[0]["VERIFY_CERTIFICATE"];
-		parameterData = parameter.getBinaryData();
-		if(parameter.rpcParameter) _verifyCertificate = parameter.rpcParameter->convertFromPacket(parameterData)->booleanValue;
+		{
+			BaseLib::Systems::RpcConfigurationParameter& parameter = configCentral[0]["SNAPSHOT_URL"];
+			if(parameter.rpcParameter)
+			{
+				std::vector<uint8_t> parameterData = parameter.getBinaryData();
+				std::string streamUrl = parameter.rpcParameter->convertFromPacket(parameterData)->stringValue;
+				_snapshotUrlInfo = getUrlInfo(streamUrl);
+			}
+		}
+
+		{
+			BaseLib::Systems::RpcConfigurationParameter& parameter = configCentral[0]["CA_FILE"];
+			std::vector<uint8_t> parameterData = parameter.getBinaryData();
+			if(parameter.rpcParameter) _caFile = parameter.rpcParameter->convertFromPacket(parameterData)->stringValue;
+			parameter = configCentral[0]["VERIFY_CERTIFICATE"];
+			parameterData = parameter.getBinaryData();
+			if(parameter.rpcParameter) _verifyCertificate = parameter.rpcParameter->convertFromPacket(parameterData)->booleanValue;
+		}
 
 		if(_streamUrlInfo.ip.empty())
 		{
@@ -680,10 +687,10 @@ void IpCamPeer::initHttpClient()
 			return;
 		}
 
-		parameter = valuesCentral[1]["STREAM_URL"];
+		BaseLib::Systems::RpcConfigurationParameter& parameter = valuesCentral[1]["STREAM_URL"];
 		if(parameter.rpcParameter && _bl->rpcPort != 0)
 		{
-			parameterData = parameter.getBinaryData();
+			std::vector<uint8_t> parameterData = parameter.getBinaryData();
 			BaseLib::PVariable variable = parameter.rpcParameter->convertFromPacket(parameterData, true);
 			std::string newPrefix("http://" + GD::physicalInterface->listenAddress() + (GD::bl->rpcPort != 80 ? ":" + std::to_string(GD::bl->rpcPort) : "") + "/ipcam/" + std::to_string(_peerID) + "/");
 			std::string newStreamUrl(newPrefix + "stream.mjpeg");
@@ -699,13 +706,13 @@ void IpCamPeer::initHttpClient()
 				std::string address(_serialNumber + ":1");
 				if(_bl->debugLevel >= 4) GD::out.printInfo("Info: STREAM_URL of peer " + std::to_string(_peerID) + " with serial number " + _serialNumber + ":1 was set to " + variable->stringValue + ".");
 
-				parameter = valuesCentral[1]["SNAPSHOT_URL"];
-				if(parameter.rpcParameter)
+				BaseLib::Systems::RpcConfigurationParameter& parameter2 = valuesCentral[1]["SNAPSHOT_URL"];
+				if(parameter2.rpcParameter)
 				{
-					variable = PVariable(new BaseLib::Variable(newPrefix + "snapshot.jpg"));
-					parameter.rpcParameter->convertToPacket(variable, parameterData);
-					parameter.setBinaryData(parameterData);
-					if(parameter.databaseId > 0) saveParameter(parameter.databaseId, parameterData);
+					variable = std::make_shared<Variable>(newPrefix + "snapshot.jpg");
+					parameter2.rpcParameter->convertToPacket(variable, parameterData);
+					parameter2.setBinaryData(parameterData);
+					if(parameter2.databaseId > 0) saveParameter(parameter2.databaseId, parameterData);
 					else saveParameter(0, ParameterGroup::Type::Enum::variables, 1, "SNAPSHOT_URL", parameterData);
 					valueKeys->push_back("SNAPSHOT_URL");
 					values->push_back(variable);
@@ -949,7 +956,7 @@ PVariable IpCamPeer::putParamset(BaseLib::PRpcClientInfo clientInfo, int32_t cha
 				if(parameter.databaseId > 0) saveParameter(parameter.databaseId, value);
 				else saveParameter(0, ParameterGroup::Type::Enum::config, channel, i->first, value);
 
-				if(channel == 0 && (i->first == "STREAM_URL" || i->first == "CA_FILE" || i->first == "VERIFY_CERTIFICATE")) reloadHttpClient = true;
+				if(channel == 0 && (i->first == "STREAM_URL" || i->first == "SNAPSHOT_URL" || i->first == "CA_FILE" || i->first == "VERIFY_CERTIFICATE")) reloadHttpClient = true;
 
 				GD::out.printInfo("Info: Parameter " + i->first + " of peer " + std::to_string(_peerID) + " and channel " + std::to_string(channel) + " was set to 0x" + BaseLib::HelperFunctions::getHexString(allParameters[list][intIndex]) + ".");
 				//Only send to device when parameter is of type config
