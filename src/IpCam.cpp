@@ -84,7 +84,7 @@ std::shared_ptr<BaseLib::Systems::ICentral> IpCam::initializeCentral(uint32_t de
 	return std::shared_ptr<IpCamCentral>(new IpCamCentral(deviceId, serialNumber, this));
 }
 
-PVariable IpCam::getPairingMethods()
+PVariable IpCam::getPairingInfo()
 {
 	try
 	{
