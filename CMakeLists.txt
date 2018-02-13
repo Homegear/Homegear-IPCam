@@ -21,8 +21,7 @@ set(SOURCE_FILES
         src/IpCamPacket.cpp
         src/IpCamPacket.h
         src/IpCamPeer.cpp
-        src/IpCamPeer.h
-        config.h)
+        src/IpCamPeer.h)
 
 add_custom_target(homegear COMMAND ../../makeAll.sh SOURCES ${SOURCE_FILES})
 

@@ -41,7 +41,8 @@ public:
 	IIpCamInterface(std::shared_ptr<BaseLib::Systems::PhysicalInterfaceSettings> settings);
 	virtual ~IIpCamInterface();
 
-	virtual std::string listenAddress() = 0;
+	virtual std::string listenAddress() { return "::1"; };
+    virtual void sendPacket(std::shared_ptr<BaseLib::Systems::Packet> packet) {}
 protected:
 	BaseLib::Output _out;
 };

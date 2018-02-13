@@ -62,6 +62,7 @@ void Interfaces::create()
 				GD::physicalInterface = device;
 			}
 		}
+		if(!GD::physicalInterface) GD::physicalInterface = std::make_shared<IIpCamInterface>(std::make_shared<BaseLib::Systems::PhysicalInterfaceSettings>());
 	}
 	catch(const std::exception& ex)
 	{
