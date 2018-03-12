@@ -121,6 +121,7 @@ PVariable IpCam::getPairingInfo()
 		auto interface = std::make_shared<BaseLib::Variable>(BaseLib::VariableType::tStruct);
 		interface->structValue->emplace("name", std::make_shared<BaseLib::Variable>(std::string("Event Server")));
 		interface->structValue->emplace("ipDevice", std::make_shared<BaseLib::Variable>(false));
+        interface->structValue->emplace("predefined", std::make_shared<BaseLib::Variable>(true));
 
 		auto field = std::make_shared<BaseLib::Variable>(BaseLib::VariableType::tStruct);
 		field->structValue->emplace("pos", std::make_shared<BaseLib::Variable>(0));
