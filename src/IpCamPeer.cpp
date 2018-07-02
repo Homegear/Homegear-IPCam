@@ -106,9 +106,10 @@ void IpCamPeer::worker()
 				if(parameter.databaseId > 0) saveParameter(parameter.databaseId, parameterData);
 				else saveParameter(0, ParameterGroup::Type::Enum::variables, 1, "MOTION", parameterData);
 				if(_bl->debugLevel >= 4) GD::out.printInfo("Info: MOTION of peer " + std::to_string(_peerID) + " with serial number " + _serialNumber + ":1 was set to false.");
+				std::string eventSource = "device-" + std::to_string(_peerID);
 				std::string address(_serialNumber + ":1");
-				raiseEvent(_peerID, 1, valueKeys, values);
-				raiseRPCEvent(_peerID, 1, address, valueKeys, values);
+				raiseEvent(eventSource, _peerID, 1, valueKeys, values);
+				raiseRPCEvent(eventSource, _peerID, 1, address, valueKeys, values);
 			}
 		}
 	}
@@ -572,11 +573,12 @@ PParameterGroup IpCamPeer::getParameterSet(int32_t channel, ParameterGroup::Type
 			if(_bl->debugLevel >= 4) GD::out.printInfo("Info: MOTION of peer " + std::to_string(_peerID) + " with serial number " + _serialNumber + ":1 was set to true.");
 			std::shared_ptr<std::vector<std::string>> valueKeys(new std::vector<std::string>{ "MOTION" });
 			std::shared_ptr<std::vector<PVariable>> values(new std::vector<PVariable> { parameter.rpcParameter->convertFromPacket(parameterData, true) });
-			std::string address(_serialNumber + ":1");
 			_motion = true;
 			_motionTime = BaseLib::HelperFunctions::getTime();
-			raiseEvent(_peerID, 1, valueKeys, values);
-			raiseRPCEvent(_peerID, 1, address, valueKeys, values);
+			std::string eventSource = "device-" + std::to_string(_peerID);
+			std::string address(_serialNumber + ":1");
+			raiseEvent(eventSource, _peerID, 1, valueKeys, values);
+			raiseRPCEvent(eventSource, _peerID, 1, address, valueKeys, values);
 			parameter = configCentral[0]["RESET_MOTION_AFTER"];
 			if(parameter.rpcParameter)
 			{
@@ -703,6 +705,7 @@ void IpCamPeer::initHttpClient()
 				else saveParameter(0, ParameterGroup::Type::Enum::variables, 1, "STREAM_URL", parameterData);
 				std::shared_ptr<std::vector<std::string>> valueKeys(new std::vector<std::string>{ "STREAM_URL" });
 				std::shared_ptr<std::vector<PVariable>> values(new std::vector<PVariable> { variable });
+				std::string eventSource = "device-" + std::to_string(_peerID);
 				std::string address(_serialNumber + ":1");
 				if(_bl->debugLevel >= 4) GD::out.printInfo("Info: STREAM_URL of peer " + std::to_string(_peerID) + " with serial number " + _serialNumber + ":1 was set to " + variable->stringValue + ".");
 
@@ -720,8 +723,8 @@ void IpCamPeer::initHttpClient()
 					if(_bl->debugLevel >= 4) GD::out.printInfo("Info: SNAPSHOT_URL of peer " + std::to_string(_peerID) + " with serial number " + _serialNumber + ":1 was set to " + variable->stringValue + ".");
 				}
 
-				raiseEvent(_peerID, 1, valueKeys, values);
-				raiseRPCEvent(_peerID, 1, address, valueKeys, values);
+				raiseEvent(eventSource, _peerID, 1, valueKeys, values);
+				raiseRPCEvent(eventSource, _peerID, 1, address, valueKeys, values);
 			}
 		}
 	}
