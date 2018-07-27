@@ -321,12 +321,9 @@ void IpCamCentral::deletePeer(uint64_t id)
 			if(_peersById.find(id) != _peersById.end()) _peersById.erase(id);
 		}
 
-		if(_currentPeer && _currentPeer->getID() == id) _currentPeer.reset();
-
 		int32_t i = 0;
 		while(peer.use_count() > 1 && i < 600)
 		{
-			if(_currentPeer && _currentPeer->getID() == id) _currentPeer.reset();
 			std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			i++;
 		}
@@ -355,15 +352,6 @@ std::string IpCamCentral::handleCliCommand(std::string command)
 	try
 	{
 		std::ostringstream stringStream;
-		if(_currentPeer)
-		{
-			if(command == "unselect" || command == "u")
-			{
-				_currentPeer.reset();
-				return "Peer unselected.\n";
-			}
-			return _currentPeer->handleCliCommand(command);
-		}
 		if(command == "help" || command == "h")
 		{
 			stringStream << "List of commands:" << std::endl << std::endl;
@@ -491,7 +479,6 @@ std::string IpCamCentral::handleCliCommand(std::string command)
 			if(!peerExists(peerID)) stringStream << "This peer is not paired to this central." << std::endl;
 			else
 			{
-				if(_currentPeer && _currentPeer->getID() == peerID) _currentPeer.reset();
 				stringStream << "Removing peer " << std::to_string(peerID) << std::endl;
 				deletePeer(peerID);
 			}
@@ -700,47 +687,6 @@ std::string IpCamCentral::handleCliCommand(std::string command)
 			}
 			return stringStream.str();
 		}
-		else if(command.compare(0, 12, "peers select") == 0 || command.compare(0, 2, "ps") == 0)
-		{
-			uint64_t id = 0;
-
-			std::stringstream stream(command);
-			std::string element;
-			int32_t offset = (command.at(1) == 's') ? 0 : 1;
-			int32_t index = 0;
-			while(std::getline(stream, element, ' '))
-			{
-				if(index < 1 + offset)
-				{
-					index++;
-					continue;
-				}
-				else if(index == 1 + offset)
-				{
-					if(element == "help") break;
-					id = BaseLib::Math::getNumber(element, false);
-					if(id == 0) return "Invalid id.\n";
-				}
-				index++;
-			}
-			if(index == 1 + offset)
-			{
-				stringStream << "Description: This command selects a peer." << std::endl;
-				stringStream << "Usage: peers select PEERID" << std::endl << std::endl;
-				stringStream << "Parameters:" << std::endl;
-				stringStream << "  PEERID:\tThe id of the peer to select. Example: 513" << std::endl;
-				return stringStream.str();
-			}
-
-			_currentPeer = getPeer(id);
-			if(!_currentPeer) stringStream << "This peer is not paired to this central." << std::endl;
-			else
-			{
-				stringStream << "Peer with id " << std::hex << std::to_string(id) << " and device type 0x" << _bl->hf.getHexString(_currentPeer->getDeviceType()) << " selected." << std::dec << std::endl;
-				stringStream << "For information about the peer's commands type: \"help\"" << std::endl;
-			}
-			return stringStream.str();
-		}
 		else return "Unknown command.\n";
 	}
 	catch(const std::exception& ex)
@@ -850,10 +796,16 @@ PVariable IpCamCentral::deleteDevice(BaseLib::PRpcClientInfo clientInfo, std::st
 	try
 	{
 		if(serialNumber.empty()) return Variable::createError(-2, "Unknown device.");
-		std::shared_ptr<IpCamPeer> peer = getPeer(serialNumber);
-		if(!peer) return PVariable(new Variable(VariableType::tVoid));
 
-		return deleteDevice(clientInfo, peer->getID(), flags);
+		uint64_t peerId = 0;
+
+		{
+			std::shared_ptr<IpCamPeer> peer = getPeer(serialNumber);
+			if(!peer) return PVariable(new Variable(VariableType::tVoid));
+			peerId = peer->getID();
+		}
+
+		return deleteDevice(clientInfo, peerId, flags);
 	}
 	catch(const std::exception& ex)
     {
@@ -870,18 +822,20 @@ PVariable IpCamCentral::deleteDevice(BaseLib::PRpcClientInfo clientInfo, std::st
     return Variable::createError(-32500, "Unknown application error.");
 }
 
-PVariable IpCamCentral::deleteDevice(BaseLib::PRpcClientInfo clientInfo, uint64_t peerID, int32_t flags)
+PVariable IpCamCentral::deleteDevice(BaseLib::PRpcClientInfo clientInfo, uint64_t peerId, int32_t flags)
 {
 	try
 	{
-		if(peerID == 0) return Variable::createError(-2, "Unknown device.");
-		std::shared_ptr<IpCamPeer> peer = getPeer(peerID);
-		if(!peer) return PVariable(new Variable(VariableType::tVoid));
-		uint64_t id = peer->getID();
+		if(peerId == 0) return Variable::createError(-2, "Unknown device.");
 
-		deletePeer(id);
+		{
+			std::shared_ptr<IpCamPeer> peer = getPeer(peerId);
+			if(!peer) return PVariable(new Variable(VariableType::tVoid));
+		}
 
-		if(peerExists(id)) return Variable::createError(-1, "Error deleting peer. See log for more details.");
+		deletePeer(peerId);
+
+		if(peerExists(peerId)) return Variable::createError(-1, "Error deleting peer. See log for more details.");
 
 		return PVariable(new Variable(VariableType::tVoid));
 	}
