@@ -29,6 +29,7 @@
         <properties>
           <readable>true</readable>
           <writeable>true</writeable>
+          <mandatory>true</mandatory>
           <casts>
             <rpcBinary />
           </casts>
