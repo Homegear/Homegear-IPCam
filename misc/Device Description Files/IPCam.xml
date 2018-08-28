@@ -29,6 +29,9 @@
         <properties>
           <readable>true</readable>
           <writeable>true</writeable>
+          <mandatory>true</mandatory>
+          <formFieldType>text</formFieldType>
+          <formPosition>0</formPosition>
           <casts>
             <rpcBinary />
           </casts>
@@ -42,6 +45,8 @@
         <properties>
           <readable>true</readable>
           <writeable>true</writeable>
+          <formFieldType>text</formFieldType>
+          <formPosition>0</formPosition>
           <casts>
             <rpcBinary />
           </casts>
