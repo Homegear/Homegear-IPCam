@@ -41,7 +41,7 @@ class IpCamCentral;
 class IpCam : public BaseLib::Systems::DeviceFamily
 {
 public:
-	IpCam(BaseLib::SharedObjects* bl, BaseLib::Systems::DeviceFamily::IFamilyEventSink* eventHandler);
+	IpCam(BaseLib::SharedObjects* bl, BaseLib::Systems::IFamilyEventSink* eventHandler);
 	virtual ~IpCam();
 	virtual void dispose();
 

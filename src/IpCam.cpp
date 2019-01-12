@@ -35,7 +35,7 @@
 namespace IpCam
 {
 
-IpCam::IpCam(BaseLib::SharedObjects* bl, BaseLib::Systems::DeviceFamily::IFamilyEventSink* eventHandler) : BaseLib::Systems::DeviceFamily(bl, eventHandler, IPCAM_FAMILY_ID, IPCAM_FAMILY_NAME)
+IpCam::IpCam(BaseLib::SharedObjects* bl, BaseLib::Systems::IFamilyEventSink* eventHandler) : BaseLib::Systems::DeviceFamily(bl, eventHandler, IPCAM_FAMILY_ID, IPCAM_FAMILY_NAME)
 {
 	GD::bl = bl;
 	GD::family = this;
