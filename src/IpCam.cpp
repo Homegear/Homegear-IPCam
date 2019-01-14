@@ -1,4 +1,4 @@
-/* Copyright 2013-2017 Sathya Laufer
+/* Copyright 2013-2019 Homegear GmbH
  *
  * Homegear is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@
 namespace IpCam
 {
 
-IpCam::IpCam(BaseLib::SharedObjects* bl, BaseLib::Systems::DeviceFamily::IFamilyEventSink* eventHandler) : BaseLib::Systems::DeviceFamily(bl, eventHandler, IPCAM_FAMILY_ID, IPCAM_FAMILY_NAME)
+IpCam::IpCam(BaseLib::SharedObjects* bl, BaseLib::Systems::IFamilyEventSink* eventHandler) : BaseLib::Systems::DeviceFamily(bl, eventHandler, IPCAM_FAMILY_ID, IPCAM_FAMILY_NAME)
 {
 	GD::bl = bl;
 	GD::family = this;
