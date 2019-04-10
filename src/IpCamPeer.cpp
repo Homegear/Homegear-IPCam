@@ -511,15 +511,15 @@ PParameterGroup IpCamPeer::getParameterSet(int32_t channel, ParameterGroup::Type
 			}
 			catch(BaseLib::SocketDataLimitException& ex)
 			{
-				GD::out.printWarning("Warning: " + ex.what());
+				GD::out.printWarning("Warning: " + std::string(ex.what()));
 			}
 			catch(BaseLib::SocketClosedException& ex)
 			{
-				GD::out.printInfo("Info: " + ex.what());
+				GD::out.printInfo("Info: " + std::string(ex.what()));
 			}
 			catch(const BaseLib::SocketOperationException& ex)
 			{
-				GD::out.printError("Error: " + ex.what());
+				GD::out.printError("Error: " + std::string(ex.what()));
 			}
 			return true;
 		}
@@ -541,11 +541,11 @@ PParameterGroup IpCamPeer::getParameterSet(int32_t channel, ParameterGroup::Type
 			}
 			catch(BaseLib::HttpClientException& ex)
 			{
-				GD::out.printWarning("Warning" + ex.what());
+				GD::out.printWarning("Warning" + std::string(ex.what()));
 			}
 			catch(BaseLib::Exception& ex)
 			{
-				GD::out.printWarning("Warning" + ex.what());
+				GD::out.printWarning("Warning" + std::string(ex.what()));
 			}
 			return true;
 		}
@@ -558,11 +558,11 @@ PParameterGroup IpCamPeer::getParameterSet(int32_t channel, ParameterGroup::Type
 			}
 			catch(BaseLib::SocketDataLimitException& ex)
 			{
-				GD::out.printWarning("Warning: " + ex.what());
+				GD::out.printWarning("Warning: " + std::string(ex.what()));
 			}
 			catch(const BaseLib::SocketOperationException& ex)
 			{
-				GD::out.printError("Error: " + ex.what());
+				GD::out.printError("Error: " + std::string(ex.what()));
 			}
 			BaseLib::Systems::RpcConfigurationParameter& parameter = valuesCentral[1]["MOTION"];
 			if(!parameter.rpcParameter) return true;
