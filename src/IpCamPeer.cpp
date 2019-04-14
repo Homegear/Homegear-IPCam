@@ -33,6 +33,8 @@
 #include "IpCamPacket.h"
 #include "IpCamCentral.h"
 
+#include <iomanip>
+
 namespace IpCam
 {
 std::shared_ptr<BaseLib::Systems::ICentral> IpCamPeer::getCentral()

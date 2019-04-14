@@ -30,6 +30,8 @@
 #include "IpCamCentral.h"
 #include "GD.h"
 
+#include <iomanip>
+
 namespace IpCam {
 
 IpCamCentral::IpCamCentral(ICentralEventSink* eventHandler) : BaseLib::Systems::ICentral(IPCAM_FAMILY_ID, GD::bl, eventHandler)
