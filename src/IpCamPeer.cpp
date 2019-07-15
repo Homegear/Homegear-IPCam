@@ -33,6 +33,8 @@
 #include "IpCamPacket.h"
 #include "IpCamCentral.h"
 
+#include <iomanip>
+
 namespace IpCam
 {
 std::shared_ptr<BaseLib::Systems::ICentral> IpCamPeer::getCentral()
@@ -46,14 +48,6 @@ std::shared_ptr<BaseLib::Systems::ICentral> IpCamPeer::getCentral()
 	catch(const std::exception& ex)
 	{
 		GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-	}
-	catch(BaseLib::Exception& ex)
-	{
-		GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-	}
-	catch(...)
-	{
-		GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__);
 	}
 	return std::shared_ptr<BaseLib::Systems::ICentral>();
 }
@@ -77,14 +71,6 @@ IpCamPeer::~IpCamPeer()
 	catch(const std::exception& ex)
 	{
 		GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-	}
-	catch(BaseLib::Exception& ex)
-	{
-		GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-	}
-	catch(...)
-	{
-		GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__);
 	}
 }
 
@@ -116,14 +102,6 @@ void IpCamPeer::worker()
 	catch(const std::exception& ex)
 	{
 		GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-	}
-	catch(BaseLib::Exception& ex)
-	{
-		GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-	}
-	catch(...)
-	{
-		GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__);
 	}
 }
 
@@ -162,14 +140,6 @@ void IpCamPeer::homegearStarted()
 	{
 		GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
 	}
-	catch(BaseLib::Exception& ex)
-	{
-		GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-	}
-	catch(...)
-	{
-		GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__);
-	}
 }
 
 void IpCamPeer::homegearShuttingDown()
@@ -183,14 +153,6 @@ void IpCamPeer::homegearShuttingDown()
 	catch(const std::exception& ex)
 	{
 		GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-	}
-	catch(BaseLib::Exception& ex)
-	{
-		GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-	}
-	catch(...)
-	{
-		GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__);
 	}
 }
 
@@ -272,14 +234,6 @@ std::string IpCamPeer::handleCliCommand(std::string command)
     {
         GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
     }
-    catch(BaseLib::Exception& ex)
-    {
-        GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-    }
-    catch(...)
-    {
-        GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__);
-    }
     return "Error executing command. See log file for more details.\n";
 }
 
@@ -336,14 +290,6 @@ std::string IpCamPeer::printConfig()
     {
     	GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
     }
-    catch(BaseLib::Exception& ex)
-    {
-    	GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-    }
-    catch(...)
-    {
-    	GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__);
-    }
     return "";
 }
 
@@ -358,14 +304,6 @@ void IpCamPeer::loadVariables(BaseLib::Systems::ICentral* central, std::shared_p
 	catch(const std::exception& ex)
     {
     	GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-    }
-    catch(BaseLib::Exception& ex)
-    {
-    	GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-    }
-    catch(...)
-    {
-    	GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__);
     }
 }
 
@@ -403,11 +341,11 @@ bool IpCamPeer::load(BaseLib::Systems::ICentral* central)
 				else saveParameter(0, ParameterGroup::Type::Enum::variables, 1, "MOTION", parameterData);
 			}
 		}
-		parameter = configCentral[0]["RESET_MOTION_AFTER"];
-		if(parameter.rpcParameter)
+        BaseLib::Systems::RpcConfigurationParameter& parameter2 = configCentral[0]["RESET_MOTION_AFTER"];
+		if(parameter2.rpcParameter)
 		{
-			std::vector<uint8_t> parameterData = parameter.getBinaryData();
-			_resetMotionAfter = parameter.rpcParameter->convertFromPacket(parameterData)->integerValue * 1000;
+			std::vector<uint8_t> parameterData = parameter2.getBinaryData();
+			_resetMotionAfter = parameter2.rpcParameter->convertFromPacket(parameterData)->integerValue * 1000;
 			if(_resetMotionAfter < 5000) _resetMotionAfter = 5000;
 			else if(_resetMotionAfter > 3600000) _resetMotionAfter = 3600000;
 		}
@@ -417,14 +355,6 @@ bool IpCamPeer::load(BaseLib::Systems::ICentral* central)
 	catch(const std::exception& ex)
     {
     	GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-    }
-    catch(BaseLib::Exception& ex)
-    {
-    	GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-    }
-    catch(...)
-    {
-    	GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__);
     }
     return false;
 }
@@ -440,14 +370,6 @@ void IpCamPeer::saveVariables()
     {
     	GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
     }
-    catch(BaseLib::Exception& ex)
-    {
-    	GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-    }
-    catch(...)
-    {
-    	GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__);
-    }
 }
 
 PParameterGroup IpCamPeer::getParameterSet(int32_t channel, ParameterGroup::Type::Enum type)
@@ -462,14 +384,6 @@ PParameterGroup IpCamPeer::getParameterSet(int32_t channel, ParameterGroup::Type
 	catch(const std::exception& ex)
 	{
 		GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-	}
-	catch(BaseLib::Exception& ex)
-	{
-		GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-	}
-	catch(...)
-	{
-		GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__);
 	}
 	return PParameterGroup();
 }
@@ -511,15 +425,15 @@ PParameterGroup IpCamPeer::getParameterSet(int32_t channel, ParameterGroup::Type
 			}
 			catch(BaseLib::SocketDataLimitException& ex)
 			{
-				GD::out.printWarning("Warning: " + ex.what());
+				GD::out.printWarning("Warning: " + std::string(ex.what()));
 			}
 			catch(BaseLib::SocketClosedException& ex)
 			{
-				GD::out.printInfo("Info: " + ex.what());
+				GD::out.printInfo("Info: " + std::string(ex.what()));
 			}
 			catch(const BaseLib::SocketOperationException& ex)
 			{
-				GD::out.printError("Error: " + ex.what());
+				GD::out.printError("Error: " + std::string(ex.what()));
 			}
 			return true;
 		}
@@ -539,13 +453,13 @@ PParameterGroup IpCamPeer::getParameterSet(int32_t channel, ParameterGroup::Type
 				socket->proofwrite(response.getRawHeader());
 				socket->proofwrite(response.getContent());
 			}
-			catch(BaseLib::HttpClientException& ex)
+			catch(const BaseLib::HttpClientException& ex)
 			{
-				GD::out.printWarning("Warning" + ex.what());
+				GD::out.printWarning("Warning" + std::string(ex.what()));
 			}
-			catch(BaseLib::Exception& ex)
+			catch(const std::exception& ex)
 			{
-				GD::out.printWarning("Warning" + ex.what());
+				GD::out.printWarning("Warning" + std::string(ex.what()));
 			}
 			return true;
 		}
@@ -558,11 +472,11 @@ PParameterGroup IpCamPeer::getParameterSet(int32_t channel, ParameterGroup::Type
 			}
 			catch(BaseLib::SocketDataLimitException& ex)
 			{
-				GD::out.printWarning("Warning: " + ex.what());
+				GD::out.printWarning("Warning: " + std::string(ex.what()));
 			}
 			catch(const BaseLib::SocketOperationException& ex)
 			{
-				GD::out.printError("Error: " + ex.what());
+				GD::out.printError("Error: " + std::string(ex.what()));
 			}
 			BaseLib::Systems::RpcConfigurationParameter& parameter = valuesCentral[1]["MOTION"];
 			if(!parameter.rpcParameter) return true;
@@ -579,11 +493,11 @@ PParameterGroup IpCamPeer::getParameterSet(int32_t channel, ParameterGroup::Type
 			std::string address(_serialNumber + ":1");
 			raiseEvent(eventSource, _peerID, 1, valueKeys, values);
 			raiseRPCEvent(eventSource, _peerID, 1, address, valueKeys, values);
-			parameter = configCentral[0]["RESET_MOTION_AFTER"];
-			if(parameter.rpcParameter)
+            BaseLib::Systems::RpcConfigurationParameter& parameter2 = configCentral[0]["RESET_MOTION_AFTER"];
+			if(parameter2.rpcParameter)
 			{
-				parameterData = parameter.getBinaryData();
-				_resetMotionAfter = parameter.rpcParameter->convertFromPacket(parameterData)->integerValue * 1000;
+				parameterData = parameter2.getBinaryData();
+				_resetMotionAfter = parameter2.rpcParameter->convertFromPacket(parameterData)->integerValue * 1000;
 				if(_resetMotionAfter < 5000) _resetMotionAfter = 5000;
 				else if(_resetMotionAfter > 3600000) _resetMotionAfter = 3600000;
 			}
@@ -638,14 +552,6 @@ IpCamPeer::UrlInfo IpCamPeer::getUrlInfo(std::string url)
 	catch(const std::exception& ex)
 	{
 		GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-	}
-	catch(BaseLib::Exception& ex)
-	{
-		GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-	}
-	catch(...)
-	{
-		GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__);
 	}
 	return urlInfo;
 }
@@ -732,14 +638,6 @@ void IpCamPeer::initHttpClient()
     {
     	GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
     }
-    catch(BaseLib::Exception& ex)
-    {
-    	GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-    }
-    catch(...)
-    {
-    	GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__);
-    }
 }
 
 PVariable IpCamPeer::getDeviceInfo(BaseLib::PRpcClientInfo clientInfo, std::map<std::string, bool> fields)
@@ -752,14 +650,6 @@ PVariable IpCamPeer::getDeviceInfo(BaseLib::PRpcClientInfo clientInfo, std::map<
 	catch(const std::exception& ex)
     {
     	GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-    }
-    catch(BaseLib::Exception& ex)
-    {
-    	GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-    }
-    catch(...)
-    {
-    	GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__);
     }
     return PVariable();
 }
@@ -823,14 +713,6 @@ PVariable IpCamPeer::getParamset(BaseLib::PRpcClientInfo clientInfo, int32_t cha
     {
         GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
     }
-    catch(BaseLib::Exception& ex)
-    {
-        GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-    }
-    catch(...)
-    {
-        GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__);
-    }
     return Variable::createError(-32500, "Unknown application error.");
 }
 
@@ -855,14 +737,6 @@ PVariable IpCamPeer::getParamsetDescription(BaseLib::PRpcClientInfo clientInfo, 
 	catch(const std::exception& ex)
     {
         GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-    }
-    catch(BaseLib::Exception& ex)
-    {
-        GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-    }
-    catch(...)
-    {
-        GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__);
     }
     return Variable::createError(-32500, "Unknown application error.");
 }
@@ -901,14 +775,6 @@ PVariable IpCamPeer::getValue(BaseLib::PRpcClientInfo clientInfo, uint32_t chann
 	catch(const std::exception& ex)
     {
     	_bl->out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-    }
-    catch(BaseLib::Exception& ex)
-    {
-    	_bl->out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-    }
-    catch(...)
-    {
-    	_bl->out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__);
     }
     return Variable::createError(-32500, "Unknown application error.");
 }
@@ -998,14 +864,6 @@ PVariable IpCamPeer::putParamset(BaseLib::PRpcClientInfo clientInfo, int32_t cha
     {
         GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
     }
-    catch(BaseLib::Exception& ex)
-    {
-        GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-    }
-    catch(...)
-    {
-        GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__);
-    }
     return Variable::createError(-32500, "Unknown application error.");
 }
 
@@ -1044,14 +902,6 @@ PVariable IpCamPeer::setValue(BaseLib::PRpcClientInfo clientInfo, uint32_t chann
 	catch(const std::exception& ex)
     {
         GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-    }
-    catch(BaseLib::Exception& ex)
-    {
-        GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__, ex.what());
-    }
-    catch(...)
-    {
-        GD::out.printEx(__FILE__, __LINE__, __PRETTY_FUNCTION__);
     }
     return Variable::createError(-32500, "Unknown application error. See error log for more details.");
 }
