@@ -29,9 +29,6 @@
 
 #include "EventServer.h"
 
-#include "homegear-base/Encoding/RapidXml/rapidxml.hpp"
-#include <ifaddrs.h>
-
 #include "../GD.h"
 
 namespace IpCam
