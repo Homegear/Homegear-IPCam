@@ -8,7 +8,7 @@ Homepage: https://homegear.eu
 
 Package: homegear-ipcam
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libhomegear-base (= <BASELIBVER>), homegear (= <BASELIBVER>), libgcrypt20, libgnutlsxx28, libgpg-error0 (>= 1.10)
+Depends: ${shlibs:Depends}, ${misc:Depends}, homegear (= <BASELIBVER>)
 Description: IPCam module for Homegear
  Homegear is a program to interface your home automation software 
  with your smart home devices.
