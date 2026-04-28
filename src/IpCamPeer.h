@@ -30,6 +30,8 @@
 #ifndef IPCAMPEER_H_
 #define IPCAMPEER_H_
 
+#include <cstdint>
+
 #include <homegear-base/BaseLib.h>
 
 #include <list>
