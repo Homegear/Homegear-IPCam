@@ -30,6 +30,8 @@
 #ifndef IPCAM_H_
 #define IPCAM_H_
 
+#include <cstdint>
+
 #include <homegear-base/BaseLib.h>
 
 using namespace BaseLib;
